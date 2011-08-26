@@ -414,7 +414,7 @@ load_plugin_modules(Config, Modules) ->
     %% If a plugin is found in base_dir and plugin_dir the clash
     %% will provoke an error and we'll abort.
     Sources = rebar_utils:find_files(PluginDir, RE)
-        ++ rebar_utils:find_files(BaseDir, RE),
+        ++ rebar_utils:find_files(BaseDir, RE, false),
 
     %% Compile and load plugins
     Loaded = [load_plugin(Src) || Src <- Sources],
