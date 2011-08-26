@@ -407,10 +407,14 @@ load_plugin_modules(Config, Modules) ->
                         Dir
                 end,
 
-    %% Find relevant sources
+    %% Find relevant sources in base_dir and plugin_dir
     Erls = string:join([atom_to_list(M)++"\\.erl" || M <- Modules], "|"),
     RE = ".*" ++ Erls ++ "\$",
-    Sources = rebar_utils:find_files(PluginDir, RE),
+    BaseDir = rebar_config:get_global(base_dir, []),
+    %% If a plugin is found in base_dir and plugin_dir only the
+    %% first will be loaded.
+    Sources = rebar_utils:find_files(PluginDir, RE)
+        ++ rebar_utils:find_files(BaseDir, RE),
 
     %% Compile and load plugins
     Loaded = [load_plugin(Src) || Src <- Sources],
